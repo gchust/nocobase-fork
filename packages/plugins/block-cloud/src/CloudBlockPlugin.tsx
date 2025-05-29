@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { BlockModel, FlowContext, FlowModel, withFlowModel, FlowsSettings } from '@nocobase/flow-engine';
-import { Plugin, Application, useFlowModel } from '@nocobase/client';
+import { Plugin } from '@nocobase/client';
 
 // Mock dataset for the resource step
 const mockDataset = {
@@ -335,7 +335,6 @@ export const CloudComponent = withFlowModel(CloudComponentView, {
   modelClass: CloudComponentModel, 
   settings: {
     // Component for configuring the flow settings in a UI (optional)
-    // For now, let's assume FlowsSettings is appropriate or use a placeholder
     component: FlowsSettings, 
     props: {
       expandAll: true, // Example prop for FlowsSettings
@@ -344,43 +343,23 @@ export const CloudComponent = withFlowModel(CloudComponentView, {
   // Default data to instantiate the model if none is provided
   defaultData: { 
     defaultFlowKey: 'echartsFlow' // Ensure this matches a flow in CloudComponentModel
+    // `data` and `stepParams` can also be set here if needed for the component's default state
   }
 });
 
-// CloudComponent is now a const, not the default export yet.
-// export default CloudComponent; // Removed this line
-
-class DemoPlugin extends Plugin {
+export class CloudBlockPlugin extends Plugin {
   async load() {
-    // Accessing CloudComponentModel directly as it's a named export in the same file
+    // Register the model class with the flow engine
     this.app.flowEngine.registerModelClass('CloudComponentModel', CloudComponentModel);
-    this.app.router.add('root', { path: '/', Component: Demo });
+    
+    // Register the component with the application's component system
+    // This makes <CloudComponent /> usable in NocoBase's UI builder or schema
+    this.app.components.add('CloudComponent', CloudComponent);
+
+    // No more demo-specific routes
+    // this.app.router.add('root', { path: '/', Component: Demo });
   }
 }
 
-const Demo = () => {
-  const uid = 'cloud-component-demo';
-  // Using CloudComponentModel as type argument for useFlowModel
-  const model = useFlowModel<CloudComponentModel>(uid, 'CloudComponentModel', { defaultFlowKey: 'echartsFlow' }); 
-  
-  if (!model) {
-    return <div>Loading model...</div>; // Or some other loading state
-  }
-
-  // CloudComponent here refers to the const defined above by withFlowModel
-  return (
-    <div style={{ padding: 24, background: '#f5f5f5', borderRadius: 8, minHeight: '400px' }}>
-      <h2>Cloud Component Demo</h2>
-      <CloudComponent model={model} defaultFlowKey="echartsFlow" />
-    </div>
-  );
-};
-
-const app = new Application({
-  router: { type: 'memory', initialEntries: ['/'] },
-  plugins: [DemoPlugin],
-  // No need to register CloudComponent in components or CloudComponentModel in models here,
-  // as the plugin handles model registration and Demo component directly uses CloudComponent.
-});
-
-export default app.getRootComponent(); // The final default export
+// No default export for a plugin file, it exports named classes/components.
+// The `Demo` component and `app` instance have been removed.

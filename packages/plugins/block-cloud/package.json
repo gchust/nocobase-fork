@@ -1,0 +1,29 @@
+{
+  "name": "@nocobase/plugin-block-cloud",
+  "version": "0.1.0",
+  "main": "dist/server/index.js",
+  "client": "dist/client/index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@nocobase/client": "latest",
+    "@nocobase/flow-engine": "latest",
+    "echarts": "^5.4.3",
+    "handlebars": "^4.7.8",
+    "markdown-it": "^13.0.2",
+    "moment": "^2.29.1",
+    "react-big-calendar": "^1.18.0",
+    "vue": "^3.3.0"
+  },
+  "devDependencies": {
+    "@nocobase/cli": "latest",
+    "typescript": "latest"
+  },
+  "x-nocobase-plugin": {
+    "displayName": "Cloud Block",
+    "description": "A plugin to render external UI components (JS, React, Vue, etc.) as blocks using RequireJS and a JS adapter.",
+    "icon": "CloudOutlined"
+  },
+  "scripts": {
+    "build": "nocobase plugin:build -x"
+  }
+}
